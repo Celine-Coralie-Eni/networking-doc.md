@@ -263,7 +263,7 @@ The configuration files used by systemd-networkd to set up netwrok interfaces ca
 Note that they have been listed in order of priority.
 These files are processed in a lexicographic order so it is recommended to start their names with numbers to make the ordering easier to read and set. So the files in /etc have the highest priority followed by /run then /lib. This means if configuration files in different directories have the same names then systemd-networkd will ignore the files with lesser priority.
 The purpose of each configuration file depends on its suffix. That is,
-netdev: They are used by systemd-networkd to create virtual network devces such as bridge or tun devices.
+.netdev: They are used by systemd-networkd to create virtual network devces such as bridge or tun devices.
 .link: They set low-level configurations for the corresponding network interface.
 .network: This is the most important suffix. The files using this suffix can be used to set up network addresses and routes.
 The network interface to which the configuration files refer to is identified in the [Match] section inside the file. There is also a "Name=" entry that can be used to reference a specific interface and there is  a "MACAddress=" entry.
