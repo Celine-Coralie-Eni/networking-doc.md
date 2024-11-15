@@ -234,6 +234,13 @@ In older times, Linux distributions named network interfaces as eth0, eth1, eth2
   ```ifconfig eth0 192.168.0.1 netmask 255.255.2.0``` and ofcourse with sudo access. All these processes I've explained above are not permanent changes we were just issuing a command to configuring an ip address on a device. But if you want to make it permanent you can configure them in configuration files.
   With debian based distributions, we have the /etc/network/interfaces but with redhat based distributions we have the /etc/sysconfig/network-scripts/. Also, with redhat machines you can simply input the command ```ifup eth0``` and the ```ifup``` command will lookup this file on redhat and configure it. We can also use the ```ifdown eth0``` command and it will bring the network interface down.
   Nowadays, most of the new distros use the ```ip``` command.  With this ```ip``` command, you can configure networks and their routing.
+  When using the ip command to configure a network you can execute the command below. But in this case we are setting the ip address of this particular network interface. For example;
+ ```ip addr add 192.168.1.100/24 brd 192.168.1.255 dev eth0```
+This command sets the IP address 192.168.1.100 with a subnet mask of 24 (255.255.255.0) and broadcasts to 192.168.1.255 on the eth0 interface.
+But in a case where you want to delete the ip address you input the command:
+```ip addr del 192.168.1.100/24 dev eth0```
+This command removes the IP address 192.168.1.100 with a subnet mask of 24 from the eth0 interface.
+Also note that the host address has a range and it ranges from the network address to the broadcast address.
   ###### Note: The ability of a network interface to have multiple ip addresses stems from a combination of virtual interfaces, router functionality and ipv6 capabilities.  
 
 ### Network Manager and ```nmcli```
