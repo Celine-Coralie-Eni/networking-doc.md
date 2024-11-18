@@ -209,9 +209,9 @@ this processses generalise how data is being transmitted on the network
 
  # Persistent Network Configuration
 #### NB: By the end of this lesson you should understand...
->Network interfaces and how they are named
->How to configure network interfaces, hostnames and DNS
->How systemd-networkd daemon works
+>Network interfaces and how they are named, 
+>How to configure network interfaces, hostnames and DNS, 
+>How systemd-networkd daemon works, 
 >Name resolution.
 # Introduction:
 In any TCP/IP network, every node must configure its network adapter to match the network requirements, otherwise they will not be able to communicate with each other. Therefore, the system administrator must provide the basic configurations so the operating sytem will be able to set up the appriopriate network interface and these network configurations are stored under the /etc directory to bring up network connectivity during boot time. 
