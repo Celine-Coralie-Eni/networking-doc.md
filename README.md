@@ -207,11 +207,11 @@ This layer defines the format of data on the network .It and uses Media acess co
 this processses generalise how data is being transmitted on the network 
 
 
- # Persistent Network Configuration
+# Persistent Network Configuration
 #### NB: By the end of this lesson you should understand...
->Network interfaces and how they are named, 
->How to configure network interfaces, hostnames and DNS, 
->How systemd-networkd daemon works, 
+>Network interfaces and how they are named
+>How to configure network interfaces, hostnames and DNS
+>How systemd-networkd daemon works
 >Name resolution.
 # Introduction:
 In any TCP/IP network, every node must configure its network adapter to match the network requirements, otherwise they will not be able to communicate with each other. Therefore, the system administrator must provide the basic configurations so the operating sytem will be able to set up the appriopriate network interface and these network configurations are stored under the /etc directory to bring up network connectivity during boot time. 
@@ -239,19 +239,22 @@ From higher  to lower priority, the following rules are used by the OS to name a
   You need the sudo access because you are changing a very critical configuration on a network. These interfaces are configured so that more infomation will be provided to make them usable and provide them ip addresses. You can also include the netmask, for example you will input the ```ifconfig``` command, specify the device and the netmask and the configuration will be set. Or better still you can do this in one command e.g,
   ```ifconfig eth0 192.168.0.1 netmask 255.255.2.0``` and ofcourse with sudo access. All these processes I've explained above are not permanent changes we were just issuing a command to configuring an ip address on a device. But if you want to make it permanent you can configure them in configuration files.
   With debian based distributions, we have the /etc/network/interfaces but with redhat based distributions we have the /etc/sysconfig/network-scripts/. Also, with redhat machines you can simply input the command ```ifup eth0``` and the ```ifup``` command will lookup this file on redhat and configure it. We can also use the ```ifdown eth0``` command and it will bring the network interface down.
-  Nowadays, most of the new distros use the ```ip``` command.  With this ```ip``` command, you can configure networks and their routing.
+  Nowadays, most of the new distros use the ```ip``` command.  With this ```ip``` command, you can configure networks and their routing. But in Lnux based systems to bring the interface up and down using the ```ip link set``` command, you can execute for example;
+   ```ip link set dev wlp2s0 up```
+You can also configure an IPaddress on a network interface using ```ip addr add``` command for example;
+```ip addr add 192.168.1.10/24 dev wlp2s0```
+
   ###### Note: The ability of a network interface to have multiple ip addresses stems from a combination of virtual interfaces , router functionality and many other reasons.
 
 ### Network Manager and ```nmcli```
 This service can "watch" the status of a network and various configurations and configure the network cards accordingly. The ```nmcli```(networkmanager commnad line interface) is a program which controls the network manager and communicates with the network manager. By default, the networkmanager daemon controls the networks which are not mentioned in the /etc/network/interfaces. This service runs in the background and controls the NICs which are not configured there. Various frontend GUI(Graphical User Interface) ot TUI(Textual User Interface) or CLI(Command Line Interface) programs exists to control or configure the networkmanager daemon. To connect to a wifi network you can use the command;
 ```nmcli device wifi connect Hypnotoad```. And this command is only used when the hypnotoad can be found in your device. Alternatively,  if you previously connected to the network you can just use the command ```nmcli connection up Hypnotoad```
 So to connect to a new hypnotoad use the command ```nmcli device wifi connect Hypnotoad password <your_password>```
-To disconnect from a currently connected wifi use the command ```nmcli device wifi disconnect```. But if you want to delete the the wifi connection completely use the command ```nmcli con delete <connection-name>```.
 The command to check the hypnotoad is ```nmcli device wifi list``` so that you can verify the name of the network you want to connect to.
 And to check the current status of the network, you can use the command ``` nmcli general``` or if you want to check the devices or list of wifi connections use the command ```nmcli device```.
 
 ### Configuration with the Hostname, Hosts and DNS
-To begin with, a hostname is a label assigned to a device that identifies it on a network. The machine's name is found in the /etc/hostname although it can be changed temporarily or permanently. To change the hostname of your computer you can use the command ```hostnamectl set-hostname new_name```. Also, you can set the prettyname using the command ```hostnamectl set-hostname --pretty "name"```. Like I said earlier, it is equally possible to change the system's hostname to a temporal name and you can do this using the command ```sudo hostname newname```. Also note that the /etc/hosts file contains IP addresses and their hostnames. Then after these chamges you can input the command ```hostnamectl``` to see all the various changes.
+To begin with, a hostname is a label assigned to a device that identifies it on a network. The machine's name is found in the /etc/hostname although it can be changed temporarily or permanently. To change the hostname of your computer you can use the command ```hostnamectl set-hostname new_name```. Also, you can set the prettyname using the command ```hostnamectl set-hostname --pretty "name"```. Like I said earlier, it is equally possible to change the system's hostname to a temporal name and you can do this using the command ```sudo hostname newname```. Also note that the /etc/hosts file contains IP addresses and their hostnames.
 The DNS(Domain Name System) is a service which translates human readable  domain names to their corresponding ip addresses. Normally, you have to configure your computer to use the DNS so it will know which IP address to contact if you want to reach  linux1st.com. The configuration can be found in the /etc/resolve.conf. If you want to convert a certain domain name into its corresponding ip address you can ping the domain name and then you will have the ip address. For example, this command ```ping google.com``` will convert the domain name google.com to its ip address. 
 We also have the nsswitch(nameserviceswitch) which is stored in the /etc/nssswitch.conf and its used to configure which services are to be used to determine information such as hostnams, passwords files and group files.
 
