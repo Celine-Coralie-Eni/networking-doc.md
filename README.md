@@ -208,6 +208,11 @@ this processses generalise how data is being transmitted on the network
 
 
  # Persistent Network Configuration
+#### NB: By the end of this lesson you should understand...
+>Network interfaces and how they are named
+>How to configure network interfaces, hostnames and DNS
+>How systemd-networkd daemon works
+>Name resolution.
 # Introduction:
 In any TCP/IP network, every node must configure its network adapter to match the network requirements, otherwise they will not be able to communicate with each other. Therefore, the system administrator must provide the basic configurations so the operating sytem will be able to set up the appriopriate network interface and these network configurations are stored under the /etc directory to bring up network connectivity during boot time. 
 
@@ -215,6 +220,9 @@ In any TCP/IP network, every node must configure its network adapter to match th
 A network interface is a point of connection between a private and a public network. It enables data to be sent and received between the computer and other network-connected devices such as routers or switches.
 ### Network Interface Cards(NICs)
 A Network Interface Card (NIC) is a computer hardware component that enables devices, such as computers or servers, to connect to a computer network.
+ 
+ In older times, Linux distributions named network interfaces as eth0, eth1, eth2 and so on. Where 0, 1 and 2 were decided by the kernel. But recently, the network interfaces in Linux machines are named wlan0, eno1, ens1, enp3s2 as such. The probem with the old naming was that it was based on which the kernel sees first when booting i.e when the kernel is booting up the first card it sees is the eth0, second eth1, third eth2 and so on.This strategy was not good enough because an update could change the whole thing and that's because if you install a new distro they may change. So with the recent ones like the wlan0 for wireless interface cards and enp3s2 which is the most common one can exactly show you there is a network card, where it is located on your computer bus and which slot. Meaning if this NIC is physically inserted into the computer, in all Linux OS it will have the same name which was a much better strategy. Also, these names can be checked using different commands. In older times, we used the ```ifconfig``` commnand which shows all the network interfaces which are up and running. But nowadays, we use the ```ip link show``` command which shows all the links(NIC). Also, note that the ```ifconfig -a``` shows all the devices and not only the devices which are up and running.
+
 #### Rules used by the OS to name and number network interfaces 
 From higher  to lower priority, the following rules are used by the OS to name and number the network interfaces:
 1. Name the interface after the interface after the index provided by the BIOS or by the firmware of embedded devices, e.g. eno1.
@@ -222,8 +230,6 @@ From higher  to lower priority, the following rules are used by the OS to name a
 3. Name the interface after its address at the corresponding bus, e.g. enp3s5.
 4. Name the interface after the interface's MAC address, e.g. enx78e7d1ea46da.
 5. Name the interface using the legacy convention, e.g. eth0.
-
-In older times, Linux distributions named network interfaces as eth0, eth1, eth2 and so on. Where 0, 1 and 2 were decided by the kernel. But recently, the network interfaces in Linux machines are named wlan0, eno1, ens1, enp3s2 as such. The probem with the old naming was that it was based on which the kernel sees first when booting i.e when the kernel is booting up the first card it sees is the eth0, second eth1, third eth2 and so on.This strategy was not good enough because an update could change the whole thing and that's because if you install a new distro they may change. So with the recent ones like the wlan0 for wireless interface cards and enp3s2 which is the most common one can exactly show you there is a network card, where it is located on your computer bus and which slot. Meaning if this NIC is physically inserted into the computer, in all Linux OS it will have the same name which was a much better strategy. Also, these names can be checked using different commands. In older times, we used the ```ifconfig``` commnand which shows all the network interfaces which are up and running. But nowadays, we use the ```ip link show``` command which shows all the links(NIC). Also, note that the ```ifconfig -a``` shows all the devices and not only the devices which are up and running.
  
  ### Network configuration 
   Refers to the process of organizing and maintaining information about all components in a network, used for updating, reparing or expanding the network.
@@ -234,18 +240,12 @@ In older times, Linux distributions named network interfaces as eth0, eth1, eth2
   ```ifconfig eth0 192.168.0.1 netmask 255.255.2.0``` and ofcourse with sudo access. All these processes I've explained above are not permanent changes we were just issuing a command to configuring an ip address on a device. But if you want to make it permanent you can configure them in configuration files.
   With debian based distributions, we have the /etc/network/interfaces but with redhat based distributions we have the /etc/sysconfig/network-scripts/. Also, with redhat machines you can simply input the command ```ifup eth0``` and the ```ifup``` command will lookup this file on redhat and configure it. We can also use the ```ifdown eth0``` command and it will bring the network interface down.
   Nowadays, most of the new distros use the ```ip``` command.  With this ```ip``` command, you can configure networks and their routing.
-  When using the ip command to configure a network you can execute the command below. But in this case we are setting the ip address of this particular network interface. For example;
- ```ip addr add 192.168.1.100/24 brd 192.168.1.255 dev eth0```
-This command sets the IP address 192.168.1.100 with a subnet mask of 24 (255.255.255.0) and broadcasts to 192.168.1.255 on the eth0 interface.
-But in a case where you want to delete the ip address you input the command:
-```ip addr del 192.168.1.100/24 dev eth0```
-This command removes the IP address 192.168.1.100 with a subnet mask of 24 from the eth0 interface.
-Also note that the host address has a range and it ranges from the network address to the broadcast address.
-  ###### Note: The ability of a network interface to have multiple ip addresses stems from a combination of virtual interfaces, router functionality and ipv6 capabilities.  
+  ###### Note: The ability of a network interface to have multiple ip addresses stems from a combination of virtual interfaces , router functionality and many other reasons.
 
 ### Network Manager and ```nmcli```
 This service can "watch" the status of a network and various configurations and configure the network cards accordingly. The ```nmcli```(networkmanager commnad line interface) is a program which controls the network manager and communicates with the network manager. By default, the networkmanager daemon controls the networks which are not mentioned in the /etc/network/interfaces. This service runs in the background and controls the NICs which are not configured there. Various frontend GUI(Graphical User Interface) ot TUI(Textual User Interface) or CLI(Command Line Interface) programs exists to control or configure the networkmanager daemon. To connect to a wifi network you can use the command;
-```nmcli device wifi connect Hypnotoad```
+```nmcli device wifi connect Hypnotoad```. And this command is only used when the hypnotoad can be found in your device. Alternatively,  if you previously connected to the network you can just use the command ```nmcli connection up Hypnotoad```
+So to connect to a new hypnotoad use the command ```nmcli device wifi connect Hypnotoad password <your_password>```
 The command to check the hypnotoad is ```nmcli device wifi list``` so that you can verify the name of the network you want to connect to.
 And to check the current status of the network, you can use the command ``` nmcli general``` or if you want to check the devices or list of wifi connections use the command ```nmcli device```.
 
@@ -263,9 +263,9 @@ The configuration files used by systemd-networkd to set up netwrok interfaces ca
 Note that they have been listed in order of priority.
 These files are processed in a lexicographic order so it is recommended to start their names with numbers to make the ordering easier to read and set. So the files in /etc have the highest priority followed by /run then /lib. This means if configuration files in different directories have the same names then systemd-networkd will ignore the files with lesser priority.
 The purpose of each configuration file depends on its suffix. That is,
-.netdev: They are used by systemd-networkd to create virtual network devces such as bridge or tun devices.
-.link: They set low-level configurations for the corresponding network interface.
-.network: This is the most important suffix. The files using this suffix can be used to set up network addresses and routes.
+>.netdev: They are used by systemd-networkd to create virtual network devces such as bridge or tun devices.
+>.link: They set low-level configurations for the corresponding network interface.
+>.network: This is the most important suffix. The files using this suffix can be used to set up network addresses and routes.
 The network interface to which the configuration files refer to is identified in the [Match] section inside the file. There is also a "Name=" entry that can be used to reference a specific interface and there is  a "MACAddress=" entry.
 Here are two files that could be used to define interfaces using a statically-provided ip address and gateway and one that uses DHCP(Dynamic Host Configuration Protocol)
 [Match]
